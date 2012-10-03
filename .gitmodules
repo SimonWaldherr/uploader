@@ -1,0 +1,3 @@
+[submodule "client/baf"]
+	path = client/baf
+	url = https://github.com/SimonWaldherr/buttons-and-forms.git
