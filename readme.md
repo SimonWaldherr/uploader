@@ -10,10 +10,6 @@ to support continued maintenance and evolution of this library.*
 ### Announcements ###
 _September 26, 2012_ - Work on Fine Uploader 3.0 has started.  Check out the [3.0 branch](https://github.com/valums/file-uploader/tree/3.0) 
 from time to time if you are interested in the progress.  Also, feel free to add ideas for 3.0 using the [issue tracker](https://github.com/valums/file-uploader/issues).
-<<<<<<< HEAD
-
-=======
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
 
 
 <br/>
@@ -23,20 +19,18 @@ from time to time if you are interested in the progress.  Also, feel free to add
 - [Features](#features)
 - [License](#license)
 - [Getting started](#getting-started)
-<<<<<<< HEAD
 - [qq.FileUploader - Setting up full upload widget](#qqfileuploader---setting-up-full-upload-widget)
 - [Options of both FileUploader & FileUploaderBasic](#options-of-both-fileuploader--fileuploaderbasic)
 - [Options of FileUploader](#options-of-fileuploader)
 - [Styling FileUploader](#styling-fileuploader)
 - [Callbacks (FileUploader & FileUploaderBasic)](#callbacks-fileuploader--fileuploaderbasic)
-=======
+- [Using the optional jQuery plug-in](#using-the-optional-jquery-plug-in)
 - [qq.FineUploader - Setting up full upload widget](#qqfineuploader---setting-up-full-upload-widget)
 - [How to override options](#how-to-override-options)
 - [Options of both FineUploader & FineUploaderBasic](#options-of-both-fineuploader--fineuploaderbasic)
 - [Options of FineUploader](#options-of-fineuploader)
 - [Styling FineUploader](#styling-fineuploader)
 - [Callbacks (FineUploader & FineUploaderBasic)](#callbacks-fineuploader--fineuploaderbasic)
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
 - [Changing alert/messages to something more user friendly](#changing-alertmessages-to-something-more-user-friendly)
 - [Instance methods](#instance-methods)
 - [Internet Explorer limitations](#internet-explorer-limitations)
@@ -105,9 +99,40 @@ Basic uploader is easier extendable, and doesn't limit possible customization.
 `qq.FineUploader` extends `qq.FineUploaderBasic`, so that all the options present
 in the basic uploader also exist in the full widget.
 
+
+<br/>
+### Using the optional jQuery plug-in ###
+A jQuery plug-in exists that wraps the native Fine Uploader code.  If you would like to reap all of the benefits that
+a jQuery plug-in offers, such as use of jQuery Events, specifying elements using the jQuery object/jQuery selectors,
+easy integration into your otherwise jQuery project: look no further!
+
+To use the jQuery plug-in, ensure you include the proper Fine Uploader js file on your page, and instantiate it like so:
+```javascript
+$('#fineUploaderElementId').fineUploader({
+    request: {
+        endpoint: '/upload/endpoint'
+    }
+});
+```
+
+The above example is the simplest possible use-case.  Note that you can use any of the options available for the native
+Fine Uploader and Fine Uploader Basic, with the following exceptions/additions/things to keep in mind:
+* There is no need to specify the `element` option.  It will be ignored if you pass it in.  The plug-in will pass the
+ `element` option for you, using the element you associated with the plug-in (the element with an id of fineUploaderElementId
+ in the above example).
+* For any option with an `HTMLElement` value, you can, instead, pass a jQuery object.  For example, if you specify the
+`button` option, the value can be `$('#myButton')`.
+* If the option takes an array of `HTMLElement`s, any item in the array that
+ is a jQuery object will be evaluated and all `HTMLElement`s associated with that jQuery object will be added to the array when
+ it is passed to the native Fine Uploader.  For example, if specify a value for the `extraDropzones` option, and, say, your
+ value is `[$('.myExtraDropzone')]`, and there are 3 elements in the DOM with this class, the plug-in will pass all 3 elements
+ to native Fine Uploader.
+* TODO callbacks as events
+* TODO calling public methods, the jQuery plug-in way
+* TODO extra options specific to the plug-in
+
 <br/>
 ### qq.FineUploader - Setting up full upload widget ###
-
 Include the uploader javascript file and, optionally, `fineuploader.css` along with any images provided into your page.
 Create container element.
 
@@ -307,7 +332,6 @@ other default values.  This works for all options that are, themselves, objects 
         </tr>
         <tr>
             <td>stopOnFirstInvalidFile</td>
-<<<<<<< HEAD
             <td>boolean</td>
             <td>true</td>
             <td>If true, when submitting multiple files, once a file is determined to be invalid, the upload process 
@@ -328,8 +352,6 @@ other default values.  This works for all options that are, themselves, objects 
         </tr>
         <tr>
             <td>forceMultipart</td>
-=======
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
             <td>boolean</td>
             <td>true</td>
             <td>If true, when submitting multiple files, once a file is determined to be invalid, the upload process 
@@ -343,11 +365,8 @@ other default values.  This works for all options that are, themselves, objects 
     </tbody>
 </table>
 
-<<<<<<< HEAD
-
 
 ### Options of FileUploader ###
-=======
 <br/>
 ### Options of FineUploader ###
 <table>
@@ -375,7 +394,6 @@ other default values.  This works for all options that are, themselves, objects 
     </tbody>
 </table>
 ##### `dragAndDrop` option properties: #####
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
 <table>
     <thead>
         <tr>
@@ -387,18 +405,15 @@ other default values.  This works for all options that are, themselves, objects 
     </thead>
     <tbody>
         <tr>
-<<<<<<< HEAD
             <td>element</td>
             <td>element</td>
             <td>null</td>
             <td>Container for the default drop zone (if supported by browser) and files list.  <b>Required</b></td>
-=======
             <td>extraDropzones</td>
             <td>array of elements</td>
             <td>[]</td>
             <td>Useful if you'd like to to designate additional dropozones for file input.  Of course, this is not relevant if the
             form uploader is used.</td>
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
         </tr>
         <tr>
             <td>hideDropzones</td>
@@ -452,7 +467,6 @@ other default values.  This works for all options that are, themselves, objects 
             <td>Text that appears in the drop zone when it is visible</td>
         </tr>
         <tr>
-<<<<<<< HEAD
             <td>hideDropzones</td>
             <td>boolean</td>
             <td>true</td>
@@ -477,7 +491,6 @@ other default values.  This works for all options that are, themselves, objects 
             The styling of the error text is controlled by the <code>fail</code> class.<br/><br/><br/>
             
             <code>mode</code>: Valid values are "default" (display the text defined in <code>failUploadText</code> next to each
-=======
             <td>formatProgress</td>
             <td>string</td>
             <td>{percent}% of {total_size}</td>
@@ -501,7 +514,6 @@ other default values.  This works for all options that are, themselves, objects 
             <td>string</td>
             <td>default</td>
             <td>Valid values are "default" (display the text defined in <code>failUploadText</code> next to each
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
             failed file), "none" (don't display any text next to a failed file), and "custom" (display error response text from the
             server next to the failed file).</td>
     	</tr>
@@ -569,7 +581,6 @@ types with default text that can be overriden as well.
 
 <br/>
 ### Internet Explorer Limitations ###
-<<<<<<< HEAD
 
 IE continues to lag _far_ behind all other browsers in terms of features.  IE10 is supposed to, finally, start to compete
 with existing modern browsers.  For those of you with customers suffering with IE9 and older, here are some of the limitations
@@ -665,12 +676,12 @@ you may want to be aware of when using Fine Uploader:
         </tr>
     </tbody>
 </table>
-\*Allegedly 
-=======
+\*Allegedly
+
 IE continues to lag _far_ behind all other browsers in terms of features.  IE10 is supposed to, finally, start to compete
 with existing modern browsers.  For those of you with customers suffering with IE9 and older, here are some of the limitations
 you may want to be aware of when using Fine Uploader:
->>>>>>> 7ee2ddf47ae63a1b9ec89df974169d95041b1f5e
+
 
 <table>
     <thead>
