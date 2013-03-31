@@ -1,0 +1,1 @@
+./compressjs.sh ./js/header.js ./js/util.js ./js/button.js ./js/ajax.requester.js ./js/deletefile.ajax.requester.js ./js/handler.base.js ./js/window.receive.message.js ./js/handler.form.js ./js/handler.xhr.js ./js/uploader.basic.js ./js/dnd.js ./js/uploader.js
