@@ -1,3 +1,4 @@
+/*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq, document*/
 
 qq.DragAndDrop = function (o) {
@@ -16,9 +17,9 @@ qq.DragAndDrop = function (o) {
       dropActive: null
     },
     callbacks: {
-      dropProcessing: function (isProcessing, files) {},
-      error: function (code, filename) {},
-      log: function (message, level) {}
+      dropProcessing: function (isProcessing, files) { return null; },
+      error: function (code, filename) { return null; },
+      log: function (message, level) { return null; }
     }
   };
   qq.extend(options, o);
@@ -155,7 +156,7 @@ qq.DragAndDrop = function (o) {
       });
     }
     disposeSupport.attach(document, 'dragleave', function (e) {
-      if (options.hideDropzones && qq.FineUploader.prototype._leaving_document_out(e)) {
+      if (options.hideDropzones && qq.FineUploader.prototype.leaving_document_out(e)) {
         for (i = 0; i < dropzones.length; i += 1) {
           qq(dropzones[i]).hide();
         }
@@ -197,11 +198,11 @@ qq.UploadDropZone = function (o) {
   var options, element, preventDrop, dropOutsideDisabled, disposeSupport = new qq.DisposeSupport();
   options = {
     element: null,
-    onEnter: function (e) {},
-    onLeave: function (e) {},
+    onEnter: function (e) { return null; },
+    onLeave: function (e) { return null; },
     // is not fired when leaving element by hovering descendants
-    onLeaveNotDescendants: function (e) {},
-    onDrop: function (e) {}
+    onLeaveNotDescendants: function (e) { return null; },
+    onDrop: function (e) { return null; }
   };
   qq.extend(options, o);
   element = options.element;

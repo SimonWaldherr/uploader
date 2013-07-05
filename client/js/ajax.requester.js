@@ -1,7 +1,6 @@
 /** Generic class for sending non-upload ajax requests and handling the associated responses **/
-//TODO Use XDomainRequest if expectCors = true.  Not necessary now since only DELETE requests are sent and XDR doesn't support pre-flighting.
-
-/*globals qq, XMLHttpRequest*/
+/*jslint browser: true, unparam: true, indent: 2 */
+/*globals qq, XMLHttpRequest */
 
 qq.AjaxRequestor = function (o) {
   "use strict";
@@ -20,19 +19,22 @@ qq.AjaxRequestor = function (o) {
         expected: false,
         sendCredentials: false
       },
-      log: function (str, level) {},
-      onSend: function (id) {},
-      onComplete: function (id, xhr, isError) {},
-      onCancel: function (id) {}
-    };
-  qq.extend(options, o);
-  log = options.log;
-  shouldParamsBeInQueryString = getMethod() === 'GET' || getMethod() === 'DELETE';
-  /**
-   * Removes element from queue, sends next request
-   */
+      log: function (str, level) { return null; },
+      onSend: function (id) { return null; },
+      onComplete: function (id, xhr, isError) { return null; },
+      onCancel: function (id) { return null; }
+    },
+    getMethod,
+    sendRequest,
+    createUrl,
+    getReadyStateChangeHandler,
+    isResponseSuccessful,
+    dequeue,
+    onComplete,
+    cancelRequest,
+    setHeaders;
 
-  function dequeue(id) {
+  dequeue = function (id) {
     var i = qq.indexOf(queue, id),
       max = options.maxConnections,
       nextId;
@@ -42,9 +44,9 @@ qq.AjaxRequestor = function (o) {
       nextId = queue[max - 1];
       sendRequest(nextId);
     }
-  }
-
-  function onComplete(id) {
+  };
+  
+  onComplete = function (id) {
     var xhr = requestState[id].xhr,
       method = getMethod(),
       isError = false;
@@ -54,9 +56,9 @@ qq.AjaxRequestor = function (o) {
       log(method + " request for " + id + " has failed - response code " + xhr.status, "error");
     }
     options.onComplete(id, xhr, isError);
-  }
-
-  function sendRequest(id) {
+  };
+  
+  sendRequest = function (id) {
     var xhr = new XMLHttpRequest(),
       method = getMethod(),
       params = {},
@@ -79,9 +81,9 @@ qq.AjaxRequestor = function (o) {
     } else {
       xhr.send();
     }
-  }
-
-  function createUrl(id, params) {
+  };
+  
+  createUrl = function (id, params) {
     var endpoint = options.endpointStore.getEndpoint(id),
       addToPath = requestState[id].addToPath;
     if (addToPath !== undefined) {
@@ -89,21 +91,20 @@ qq.AjaxRequestor = function (o) {
     }
     if (shouldParamsBeInQueryString && params) {
       return qq.obj2url(params, endpoint);
-    } else {
-      return endpoint;
     }
-  }
-
-  function getReadyStateChangeHandler(id) {
+    return endpoint;
+  };
+  
+  getReadyStateChangeHandler = function (id) {
     var xhr = requestState[id].xhr;
     return function () {
       if (xhr.readyState === 4) {
         onComplete(id, xhr);
       }
     };
-  }
-
-  function setHeaders(id) {
+  };
+  
+  setHeaders = function (id) {
     var xhr = requestState[id].xhr,
       customHeaders = options.customHeaders;
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -111,9 +112,9 @@ qq.AjaxRequestor = function (o) {
     qq.each(customHeaders, function (name, val) {
       xhr.setRequestHeader(name, val);
     });
-  }
-
-  function cancelRequest(id) {
+  };
+  
+  cancelRequest = function (id) {
     var xhr = requestState[id].xhr,
       method = getMethod();
     if (xhr) {
@@ -125,18 +126,26 @@ qq.AjaxRequestor = function (o) {
       return true;
     }
     return false;
-  }
-
-  function isResponseSuccessful(responseCode) {
+  };
+  
+  isResponseSuccessful = function (responseCode) {
     return qq.indexOf(options.successfulResponseCodes, responseCode) >= 0;
-  }
-
-  function getMethod() {
+  };
+  
+  getMethod = function () {
     if (options.demoMode) {
       return "GET";
     }
     return options.method;
-  }
+  };
+
+  qq.extend(options, o);
+  log = options.log;
+  shouldParamsBeInQueryString = getMethod() === 'GET' || getMethod() === 'DELETE';
+  /**
+   * Removes element from queue, sends next request
+   */
+
   return {
     send: function (id, addToPath) {
       requestState[id] = {

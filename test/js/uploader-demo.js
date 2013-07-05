@@ -7,7 +7,7 @@ $(document).ready(function() {
         element: $('#basicUploadSuccessExample')[0],
         debug: true,
         request: {
-            endpoint: "http://ray.test:8080/upload/receiver"
+            endpoint: "./../server/php/example.php"
         },
         callbacks: {
             onError: errorHandler
@@ -24,7 +24,7 @@ $(document).ready(function() {
         autoUpload: false,
         uploadButtonText: "Select Files",
         request: {
-            endpoint: "/upload/receiver"
+            endpoint: "./../server/php/example.php"
         },
         callbacks: {
             onError: errorHandler
@@ -42,7 +42,7 @@ $(document).ready(function() {
             onError: errorHandler
         },
         request: {
-            endpoint: "/upload/receiver",
+            endpoint: "./../server/php/example.php",
             params: {"generateError": true}
         },
         failedUploadTextDisplay: {
@@ -56,7 +56,7 @@ $(document).ready(function() {
         element: $('#uploadWithVariousOptionsExample')[0],
         multiple: false,
         request: {
-            endpoint: "/upload/receiver"
+            endpoint: "./../server/php/example.php"
         },
         validation: {
             allowedExtensions: ['jpeg', 'jpg', 'txt'],
@@ -75,7 +75,7 @@ $(document).ready(function() {
         autoUpload: false,
         button: $("#fubUploadButton")[0],
         request: {
-            endpoint: "/upload/receiver"
+            endpoint: "./../server/php/example.php"
         },
         callbacks: {
             onError: errorHandler

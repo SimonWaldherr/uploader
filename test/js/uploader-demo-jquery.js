@@ -11,7 +11,7 @@ $(document).ready(function() {
 //            expected: true
 //        },
         request: {
-            endpoint: "/upload/receiver",
+            endpoint: "./../server/php/example.php",
             paramsInBody: true
 //            params: {
 //                test: 'one',
@@ -41,7 +41,7 @@ $(document).ready(function() {
         },
         deleteFile: {
             enabled: true,
-            endpoint: '/upload/receiver',
+            endpoint: './../server/php/example.php',
             forceConfirm: true,
             params: {foo: "bar"}
         },
@@ -61,7 +61,7 @@ $(document).ready(function() {
         autoUpload: false,
         uploadButtonText: "Select Files",
         request: {
-            endpoint: "/upload/receiver"
+            endpoint: "./../server/php/example.php"
         },
         display: {
             fileSizeOnSubmit: true
@@ -75,7 +75,7 @@ $(document).ready(function() {
 
     $('#basicUploadFailureExample').fineUploader({
         request: {
-            endpoint: "/upload/receiver",
+            endpoint: "./../server/php/example.php",
             params: {"generateError": true}
         },
         failedUploadTextDisplay: {
@@ -92,7 +92,7 @@ $(document).ready(function() {
     $('#uploadWithVariousOptionsExample').fineUploader({
         multiple: false,
         request: {
-            endpoint: "/upload/receiver"
+            endpoint: "./../server/php/example.php"
         },
         validation: {
             allowedExtensions: ['jpeg', 'jpg', 'txt'],
@@ -114,7 +114,7 @@ $(document).ready(function() {
         autoUpload: false,
         button: $("#fubUploadButton"),
         request: {
-            endpoint: "/upload/receiver"
+            endpoint: "./../server/php/example.php"
         }
     }).on('error', errorHandler);
 });

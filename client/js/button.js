@@ -1,18 +1,22 @@
+/*jslint browser: true, unparam: true, indent: 2 */
+/*globals qq */
+
 qq.UploadButton = function (o) {
-  this._options = {
+  "use strict";
+  this.options = {
     element: null,
     // if set to true adds multiple attribute to file input
     multiple: false,
     acceptFiles: null,
     // name attribute of file input
     name: 'file',
-    onChange: function (input) {},
+    onChange: function (input) { return null; },
     hoverClass: 'qq-upload-button-hover',
     focusClass: 'qq-upload-button-focus'
   };
-  qq.extend(this._options, o);
+  qq.extend(this.options, o);
   this._disposeSupport = new qq.DisposeSupport();
-  this._element = this._options.element;
+  this._element = this.options.element;
   // make button suitable container for input
   qq(this._element).css({
     position: 'relative',
@@ -33,17 +37,17 @@ qq.UploadButton.prototype = {
     if (this._input.parentNode) {
       qq(this._input).remove();
     }
-    qq(this._element).removeClass(this._options.focusClass);
+    qq(this._element).removeClass(this.options.focusClass);
     this._input = this._createInput();
   },
   _createInput: function () {
     var input = document.createElement("input");
-    if (this._options.multiple) {
+    if (this.options.multiple) {
       input.setAttribute("multiple", "multiple");
     }
-    if (this._options.acceptFiles) input.setAttribute("accept", this._options.acceptFiles);
+    if (this.options.acceptFiles) input.setAttribute("accept", this.options.acceptFiles);
     input.setAttribute("type", "file");
-    input.setAttribute("name", this._options.name);
+    input.setAttribute("name", this.options.name);
     qq(input).css({
       position: 'absolute',
       // in Opera only 'browse' button
@@ -62,19 +66,19 @@ qq.UploadButton.prototype = {
     this._element.appendChild(input);
     var self = this;
     this._disposeSupport.attach(input, 'change', function () {
-      self._options.onChange(input);
+      self.options.onChange(input);
     });
     this._disposeSupport.attach(input, 'mouseover', function () {
-      qq(self._element).addClass(self._options.hoverClass);
+      qq(self._element).addClass(self.options.hoverClass);
     });
     this._disposeSupport.attach(input, 'mouseout', function () {
-      qq(self._element).removeClass(self._options.hoverClass);
+      qq(self._element).removeClass(self.options.hoverClass);
     });
     this._disposeSupport.attach(input, 'focus', function () {
-      qq(self._element).addClass(self._options.focusClass);
+      qq(self._element).addClass(self.options.focusClass);
     });
     this._disposeSupport.attach(input, 'blur', function () {
-      qq(self._element).removeClass(self._options.focusClass);
+      qq(self._element).removeClass(self.options.focusClass);
     });
     // IE and Opera, unfortunately have 2 tab stops on file input
     // which is unacceptable in our case, disable keyboard access

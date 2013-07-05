@@ -1,5 +1,5 @@
 /** Generic class for sending non-upload ajax requests and handling the associated responses **/
-
+/*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq, XMLHttpRequest*/
 
 qq.DeleteFileAjaxRequestor = function (o) {
@@ -15,9 +15,9 @@ qq.DeleteFileAjaxRequestor = function (o) {
         expected: false,
         sendCredentials: false
       },
-      log: function (str, level) {},
-      onDelete: function (id) {},
-      onDeleteComplete: function (id, xhr, isError) {}
+      log: function (str, level) { return null; },
+      onDelete: function (id) { return null; },
+      onDeleteComplete: function (id, xhr, isError) { return null; }
     };
   qq.extend(options, o);
   requestor = new qq.AjaxRequestor({
