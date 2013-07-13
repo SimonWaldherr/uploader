@@ -1,3 +1,4 @@
+/*jslint browser: true, unparam: true, indent: 2, bitwise: true */
 /*globals window, navigator, document, FormData, File, HTMLInputElement, XMLHttpRequest, Blob*/
 
 var qq = function (element) {
@@ -33,10 +34,8 @@ var qq = function (element) {
       }
       if (element.contains) {
         return element.contains(descendant);
-      } else {
-        /*jslint bitwise: true*/
-        return !!(descendant.compareDocumentPosition(element) & 8);
       }
+      return !!(descendant.compareDocumentPosition(element) & 8);
     },
     /**
      * Insert this element before elementB.
@@ -55,7 +54,7 @@ var qq = function (element) {
      */
     css: function (styles) {
       if (styles.opacity !== null) {
-        if (typeof element.style.opacity !== 'string' && typeof (element.filters) !== 'undefined') {
+        if (typeof element.style.opacity !== 'string' && (element.filters) !== undefined) {
           styles.filter = 'alpha(opacity=' + Math.round(100 * styles.opacity) + ')';
         }
       }
@@ -128,13 +127,14 @@ qq.log = function (message, level) {
 };
 qq.isObject = function (variable) {
   "use strict";
-  return variable !== null && variable && typeof (variable) === "object" && variable.constructor === Object;
+  return ((variable !== null) && variable && (typeof variable === "object") && (variable.constructor === Object));
 };
 qq.isFunction = function (variable) {
   "use strict";
-  return typeof (variable) === "function";
+  return (typeof variable === "function");
 };
 qq.trimStr = function (string) {
+  "use strict";
   if (String.prototype.trim) {
     return string.trim();
   }
@@ -144,7 +144,8 @@ qq.isFileOrInput = function (maybeFileOrInput) {
   "use strict";
   if (qq.isBlob(maybeFileOrInput) && window.File && maybeFileOrInput instanceof File) {
     return true;
-  } else if (window.HTMLInputElement) {
+  }
+  if (window.HTMLInputElement) {
     if (maybeFileOrInput instanceof HTMLInputElement) {
       if (maybeFileOrInput.type && maybeFileOrInput.type.toLowerCase() === 'file') {
         return true;
@@ -167,11 +168,7 @@ qq.isXhrUploadSupported = function () {
   "use strict";
   var input = document.createElement('input');
   input.type = 'file';
-  return (
-    input.multiple !== undefined &&
-    typeof File !== "undefined" &&
-    typeof FormData !== "undefined" &&
-    typeof (new XMLHttpRequest()).upload !== "undefined");
+  return (input.multiple !== undefined && File !== undefined && FormData !== undefined && (new XMLHttpRequest()).upload !== undefined);
 };
 qq.isFolderDropSupported = function (dataTransfer) {
   "use strict";
@@ -179,9 +176,7 @@ qq.isFolderDropSupported = function (dataTransfer) {
 };
 qq.isFileChunkingSupported = function () {
   "use strict";
-  return !qq.android() && //android's impl of Blob.slice is broken
-  qq.isXhrUploadSupported() &&
-    (File.prototype.slice || File.prototype.webkitSlice || File.prototype.mozSlice);
+  return !qq.android() && qq.isXhrUploadSupported() && (File.prototype.slice || File.prototype.webkitSlice || File.prototype.mozSlice);
 };
 qq.extend = function (first, second, extendNested) {
   "use strict";
@@ -202,17 +197,21 @@ qq.extend = function (first, second, extendNested) {
  */
 qq.indexOf = function (arr, elt, from) {
   "use strict";
+  var len = arr.length, i;
   if (arr.indexOf) {
     return arr.indexOf(elt, from);
   }
   from = from || 0;
-  var len = arr.length;
   if (from < 0) {
     from += len;
   }
-  for (; from < len; from += 1) {
+  for (i = 0; from < len; from += 1) {
     if (arr.hasOwnProperty(from) && arr[from] === elt) {
       return from;
+    }
+    i += 1;
+    if (i > len) {
+      return -1;
     }
   }
   return -1;
@@ -319,9 +318,8 @@ qq.obj2url = function (obj, temp, prefixDone) {
     uristrings = [],
     prefix = '&',
     add = function (nextObj, i) {
-      var nextTemp = temp ? (/\[\]$/.test(temp)) // prevent double-encoding
-      ? temp : temp + '[' + i + ']' : i;
-      if ((nextTemp !== 'undefined') && (i !== 'undefined')) {
+      var nextTemp = temp ? (/\[\]$/.test(temp)) ? temp : temp + '[' + i + ']' : i;
+      if ((nextTemp !== undefined) && (i !== undefined)) {
         uristrings.push(
           (typeof nextObj === 'object') ? qq.obj2url(nextObj, nextTemp, true) : (Object.prototype.toString.call(nextObj) === '[object Function]') ? encodeURIComponent(nextTemp) + '=' + encodeURIComponent(nextObj()) : encodeURIComponent(nextTemp) + '=' + encodeURIComponent(nextObj)
         );
@@ -331,12 +329,12 @@ qq.obj2url = function (obj, temp, prefixDone) {
     prefix = (/\?/.test(temp)) ? (/\?$/.test(temp)) ? '' : '&' : '?';
     uristrings.push(temp);
     uristrings.push(qq.obj2url(obj));
-  } else if ((Object.prototype.toString.call(obj) === '[object Array]') && (typeof obj !== 'undefined')) {
+  } else if ((Object.prototype.toString.call(obj) === '[object Array]') && (obj !== undefined)) {
     // we wont use a for-in-loop on an array (performance)
     for (i = -1, len = obj.length; i < len; i += 1) {
       add(obj[i], i);
     }
-  } else if ((typeof obj !== 'undefined') && (obj !== null) && (typeof obj === "object")) {
+  } else if ((obj !== undefined) && (obj !== null) && (typeof obj === "object")) {
     // for anything else but a scalar, we will use for-in-loop
     for (i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -348,11 +346,8 @@ qq.obj2url = function (obj, temp, prefixDone) {
   }
   if (temp) {
     return uristrings.join(prefix);
-  } else {
-    return uristrings.join(prefix)
-      .replace(/^&/, '')
-      .replace(/%20/g, '+');
   }
+  return uristrings.join(prefix).replace(/^&/, '').replace(/%20/g, '+');
 };
 qq.obj2FormData = function (obj, formData, arrayKeyName) {
   "use strict";
@@ -388,6 +383,7 @@ qq.obj2Inputs = function (obj, form) {
   return form;
 };
 qq.setCookie = function (name, value, days) {
+  "use strict";
   var date = new Date(),
     expires = "";
   if (days) {
@@ -397,12 +393,15 @@ qq.setCookie = function (name, value, days) {
   document.cookie = name + "=" + value + expires + "; path=/";
 };
 qq.getCookie = function (name) {
+  "use strict";
   var nameEQ = name + "=",
     ca = document.cookie.split(';'),
-    c;
-  for (var i = 0; i < ca.length; i++) {
+    c,
+    i;
+
+  for (i = 0; i < ca.length; i += 1) {
     c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) === ' ') {
       c = c.substring(1, c.length);
     }
     if (c.indexOf(nameEQ) === 0) {
@@ -411,11 +410,14 @@ qq.getCookie = function (name) {
   }
 };
 qq.getCookieNames = function (regexp) {
+  "use strict";
   var cookies = document.cookie.split(';'),
-    cookieNames = [];
+    cookieNames = [],
+    equalsIdx;
+
   qq.each(cookies, function (idx, cookie) {
     cookie = qq.trimStr(cookie);
-    var equalsIdx = cookie.indexOf("=");
+    equalsIdx = cookie.indexOf("=");
     if (cookie.match(regexp)) {
       cookieNames.push(cookie.substr(0, equalsIdx));
     }
@@ -423,9 +425,11 @@ qq.getCookieNames = function (regexp) {
   return cookieNames;
 };
 qq.deleteCookie = function (name) {
+  "use strict";
   qq.setCookie(name, "", -1);
 };
 qq.areCookiesEnabled = function () {
+  "use strict";
   var randNum = Math.random() * 100000,
     name = "qqCookieTest:" + randNum;
   qq.setCookie(name, 1);
@@ -440,12 +444,12 @@ qq.areCookiesEnabled = function () {
  * implemented.  For a more secure JSON.parse polyfill, use Douglas Crockford's json2.js.
  */
 qq.parseJson = function (json) {
-  /*jshint evil: true*/
+  "use strict";
   if (window.JSON && qq.isFunction(JSON.parse)) {
     return JSON.parse(json);
-  } else {
-    return eval("(" + json + ")");
   }
+  /*jslint evil: true */
+  return eval("(" + json + ")");
 };
 /**
  * A generic module which supports object disposing in dispose() method.
@@ -462,13 +466,11 @@ qq.DisposeSupport = function () {
         if (disposer) {
           disposer();
         }
-      }
-      while (disposer);
+      } while (disposer);
     },
     /** Attach event handler and register de-attacher as a disposer */
     attach: function () {
       var args = arguments;
-      /*jslint undef:true*/
       this.addDisposer(qq(args[0]).attach.apply(this, Array.prototype.slice.call(arguments, 1)));
     },
     /** Add disposer to the collection */

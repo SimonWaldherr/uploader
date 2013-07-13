@@ -1,7 +1,9 @@
+/*jslint browser: true, unparam: true, indent: 2 */
+/*globals qq */
+
 qq.WindowReceiveMessage = function (o) {
-  var options = {
-    log: function (message, level) {}
-  },
+  "use strict";
+  var options = {},
     callbackWrapperDetachers = {};
   qq.extend(options, o);
   return {
@@ -11,8 +13,6 @@ qq.WindowReceiveMessage = function (o) {
       };
       if (window.postMessage) {
         callbackWrapperDetachers[id] = qq(window).attach("message", onMessageCallbackWrapper);
-      } else {
-        log("iframe message passing not supported in this browser!", "error");
       }
     },
     stopReceivingMessages: function (id) {
