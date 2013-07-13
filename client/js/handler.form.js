@@ -1,5 +1,6 @@
 /*globals qq, document, setTimeout*/
 
+/*jslint browser: true, unparam: true, indent: 2 */
 /*globals clearTimeout*/
 
 qq.UploadHandlerForm = function (o, uploadCompleteCallback, logCallback) {
@@ -73,9 +74,7 @@ qq.UploadHandlerForm = function (o, uploadCompleteCallback, logCallback) {
         }
         try {
           // fixing Opera 10.53
-          if (iframe.contentDocument &&
-            iframe.contentDocument.body &&
-            iframe.contentDocument.body.innerHTML == "false") {
+          if (iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerHTML == "false") {
             // In Opera event is fired second time
             // when body.innerHTML changed from false
             // to server response approx. after 1 sec
@@ -96,12 +95,12 @@ qq.UploadHandlerForm = function (o, uploadCompleteCallback, logCallback) {
 
   function getIframeContentJson(iframe) {
     /*jshint evil: true*/
-    var response;
+    var response, doc, innerHTML;
     //IE may throw an "access is denied" error when attempting to access contentDocument on the iframe in some cases
     try {
       // iframe.contentWindow.document - for IE<7
-      var doc = iframe.contentDocument || iframe.contentWindow.document,
-        innerHTML = doc.body.innerHTML;
+      doc = iframe.contentDocument || iframe.contentWindow.document;
+      innerHTML = doc.body.innerHTML;
       log("converting iframe's innerHTML to JSON");
       log("innerHTML = " + innerHTML);
       //plain text response may be wrapped in <pre> tag
@@ -215,7 +214,7 @@ qq.UploadHandlerForm = function (o, uploadCompleteCallback, logCallback) {
       form.appendChild(input);
       attachLoadEvent(iframe, function (responseFromMessage) {
         log('iframe loaded');
-        var response = responseFromMessage ? responseFromMessage : getIframeContentJson(iframe);
+        var response = responseFromMessage || getIframeContentJson(iframe);
         detachLoadEvent(id);
         //we can't remove an iframe if the iframe doesn't belong to the same domain
         if (!options.cors.expected) {

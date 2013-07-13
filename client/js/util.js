@@ -298,7 +298,7 @@ qq.each = function (obj, callback) {
 };
 /**
  * obj2url() takes a json-object as argument and generates
- * a querystring. pretty much like jQuery.param()
+ * a querystring.
  *
  * how to use:
  *

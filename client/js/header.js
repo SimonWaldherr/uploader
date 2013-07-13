@@ -10,3 +10,5 @@
  * Licensed under MIT license see license.txt.
  */
 
+/*jslint browser: true, unparam: true, indent: 2 */
+

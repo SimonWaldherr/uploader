@@ -94,7 +94,7 @@ qq.FineUploader = function (o) {
   }, true);
   // overwrite options with user supplied
   qq.extend(this.options, o, true);
-  this._wrapCallbacks();
+  this.wrapCallbacks();
   // overwrite the upload button text if any
   // same for the Cancel button and Fail message text
   this.options.template = this.options.template.replace(/\{dragZoneText\}/g, this.options.text.dragZone);
@@ -104,12 +104,12 @@ qq.FineUploader = function (o) {
   this.options.fileTemplate = this.options.fileTemplate.replace(/\{retryButtonText\}/g, this.options.text.retryButton);
   this.options.fileTemplate = this.options.fileTemplate.replace(/\{deleteButtonText\}/g, this.options.text.deleteButton);
   this.options.fileTemplate = this.options.fileTemplate.replace(/\{statusText\}/g, "");
-  this._element = this.options.element;
-  this._element.innerHTML = this.options.template;
-  this._listElement = this.options.listElement || this._find(this._element, 'list');
+  this.element = this.options.element;
+  this.element.innerHTML = this.options.template;
+  this._listElement = this.options.listElement || this._find(this.element, 'list');
   this._classes = this.options.classes;
   if (!this._button) {
-    this._button = this._createUploadButton(this._find(this._element, 'button'));
+    this._button = this._createUploadButton(this._find(this.element, 'button'));
   }
   this._bindCancelAndRetryEvents();
   this._dnd = this._setupDragAndDrop();
@@ -138,10 +138,10 @@ qq.extend(qq.FineUploader.prototype, {
   },
   reset: function () {
     qq.FineUploaderBasic.prototype.reset.apply(this, arguments);
-    this._element.innerHTML = this.options.template;
-    this._listElement = this.options.listElement || this._find(this._element, 'list');
+    this.element.innerHTML = this.options.template;
+    this._listElement = this.options.listElement || this._find(this.element, 'list');
     if (!this.options.button) {
-      this._button = this._createUploadButton(this._find(this._element, 'button'));
+      this._button = this._createUploadButton(this._find(this.element, 'button'));
     }
     this._bindCancelAndRetryEvents();
     this._dnd.dispose();
@@ -153,7 +153,7 @@ qq.extend(qq.FineUploader.prototype, {
   },
   _setupDragAndDrop: function () {
     var self = this,
-      dropProcessingEl = this._find(this._element, 'dropProcessing'),
+      dropProcessingEl = this._find(this.element, 'dropProcessing'),
       dnd, preventSelectFiles, defaultDropAreaEl;
     preventSelectFiles = function (event) {
       event.preventDefault();
@@ -217,7 +217,7 @@ qq.extend(qq.FineUploader.prototype, {
   },
   _onSubmit: function (id, name) {
     qq.FineUploaderBasic.prototype._onSubmit.apply(this, arguments);
-    this._addToList(id, name);
+    this.addToList(id, name);
   },
   // Update the progress bar & percentage as the file is uploaded
   _onProgress: function (id, name, loaded, total) {
@@ -232,10 +232,10 @@ qq.extend(qq.FineUploader.prototype, {
       qq(progressBar).hide();
       qq(this._find(item, 'statusText')).setText(this.options.text.waitingForResponse);
       // If last byte was sent, display total file size
-      this._displayFileSize(id);
+      this.displayFileSize(id);
     } else {
       // If still uploading, display percentage - total size is actually the total request(s) size
-      this._displayFileSize(id, loaded, total);
+      this.displayFileSize(id, loaded, total);
       qq(progressBar).css({
         display: 'block'
       });
@@ -362,7 +362,7 @@ qq.extend(qq.FineUploader.prototype, {
       self._sendDeleteRequest(id);
     });
   },
-  _addToList: function (id, name) {
+  addToList: function (id, name) {
     var item = qq.toElement(this.options.fileTemplate);
     if (this.options.disableCancelForFormUploads && !qq.isXhrUploadSupported()) {
       var cancelLink = this._find(item, 'cancel');
@@ -374,18 +374,18 @@ qq.extend(qq.FineUploader.prototype, {
     qq(this._find(item, 'size')).hide();
     if (!this.options.multiple) {
       this._handler.cancelAll();
-      this._clearList();
+      this.clearList();
     }
     this._listElement.appendChild(item);
     if (this.options.display.fileSizeOnSubmit && qq.isXhrUploadSupported()) {
-      this._displayFileSize(id);
+      this.displayFileSize(id);
     }
   },
-  _clearList: function () {
+  clearList: function () {
     this._listElement.innerHTML = '';
     this.clearStoredFiles();
   },
-  _displayFileSize: function (id, loadedSize, totalSize) {
+  displayFileSize: function (id, loadedSize, totalSize) {
     var item = this.getItemByFileId(id),
       size = this.getSize(id),
       sizeForDisplay = this._formatSize(size),
@@ -404,7 +404,7 @@ qq.extend(qq.FineUploader.prototype, {
   _bindCancelAndRetryEvents: function () {
     var self = this,
       list = this._listElement;
-    this._disposeSupport.attach(list, 'click', function (e) {
+    this.disposeSupport.attach(list, 'click', function (e) {
       e = e || window.event;
       var target = e.target || e.srcElement;
       if (qq(target).hasClass(self._classes.cancel) || qq(target).hasClass(self._classes.retry) || qq(target).hasClass(self._classes.deleteButton)) {

@@ -1,9 +1,19 @@
+/*jslint browser: true, unparam: true, indent: 2 */
 /*globals jQuery, qq*/
 
 (function ($) {
   "use strict";
-  var uploader, $el, init, dataStore, pluginOption, pluginOptions, addCallbacks, transformVariables, isValidCommand,
+  var uploader,
+    $el,
+    init,
+    dataStore,
+    pluginOption,
+    pluginOptions,
+    addCallbacks,
+    transformVariables,
+    isValidCommand,
     delegateCommand;
+
   pluginOptions = ['uploaderType'];
   init = function (options) {
     if (options) {
@@ -43,7 +53,9 @@
   //implement all callbacks defined in Fine Uploader as functions that trigger appropriately names events and
   // return the result of executing the bound handler back to Fine Uploader
   addCallbacks = function (transformedOpts) {
-    var callbacks = transformedOpts.callbacks = {};
+    var callbacks = {};
+
+    transformedOpts.callbacks = {};
     $.each(new qq.FineUploaderBasic().options.callbacks, function (prop, func) {
       var name, $callbackEl;
       name = /^on(\w+)/.exec(prop)[1];
@@ -96,8 +108,7 @@
     }
   };
   isValidCommand = function (command) {
-    return $.type(command) === "string" && !command.match(/^_/) && //enforce private methods convention
-    uploader()[command] !== undefined;
+    return $.type(command) === "string" && !command.match(/^_/) && uploader()[command] !== undefined;
   };
   //assuming we have already verified that this is a valid command, call the associated function in the underlying
   // Fine Uploader instance (passing along the arguments from the caller) and return the result of the call back to the caller
@@ -126,7 +137,8 @@
     });
     if (retVals.length === 1) {
       return retVals[0];
-    } else if (retVals.length > 1) {
+    }
+    if (retVals.length > 1) {
       return retVals;
     }
     return this;

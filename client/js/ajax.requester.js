@@ -45,7 +45,7 @@ qq.AjaxRequestor = function (o) {
       sendRequest(nextId);
     }
   };
-  
+
   onComplete = function (id) {
     var xhr = requestState[id].xhr,
       method = getMethod(),
@@ -57,7 +57,7 @@ qq.AjaxRequestor = function (o) {
     }
     options.onComplete(id, xhr, isError);
   };
-  
+
   sendRequest = function (id) {
     var xhr = new XMLHttpRequest(),
       method = getMethod(),
@@ -82,7 +82,7 @@ qq.AjaxRequestor = function (o) {
       xhr.send();
     }
   };
-  
+
   createUrl = function (id, params) {
     var endpoint = options.endpointStore.getEndpoint(id),
       addToPath = requestState[id].addToPath;
@@ -94,7 +94,7 @@ qq.AjaxRequestor = function (o) {
     }
     return endpoint;
   };
-  
+
   getReadyStateChangeHandler = function (id) {
     var xhr = requestState[id].xhr;
     return function () {
@@ -103,7 +103,7 @@ qq.AjaxRequestor = function (o) {
       }
     };
   };
-  
+
   setHeaders = function (id) {
     var xhr = requestState[id].xhr,
       customHeaders = options.customHeaders;
@@ -113,7 +113,7 @@ qq.AjaxRequestor = function (o) {
       xhr.setRequestHeader(name, val);
     });
   };
-  
+
   cancelRequest = function (id) {
     var xhr = requestState[id].xhr,
       method = getMethod();
@@ -127,11 +127,11 @@ qq.AjaxRequestor = function (o) {
     }
     return false;
   };
-  
+
   isResponseSuccessful = function (responseCode) {
     return qq.indexOf(options.successfulResponseCodes, responseCode) >= 0;
   };
-  
+
   getMethod = function () {
     if (options.demoMode) {
       return "GET";

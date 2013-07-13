@@ -1,4 +1,8 @@
+/*jslint browser: true, unparam: true, indent: 2 */
+/*globals qq */
+
 qq.FineUploaderBasic = function (o) {
+  "use strict";
   var that = this;
   this.options = {
     debug: false,
@@ -105,8 +109,8 @@ qq.FineUploaderBasic = function (o) {
     }
   };
   qq.extend(this.options, o, true);
-  this._wrapCallbacks();
-  this._disposeSupport = new qq.DisposeSupport();
+  this.wrapCallbacks();
+  this.disposeSupport = new qq.DisposeSupport();
   // number of files being uploaded
   this._filesInProgress = [];
   this._storedIds = [];
@@ -280,7 +284,7 @@ qq.FineUploaderBasic.prototype = {
       hoverClass: this.options.classes.buttonHover,
       focusClass: this.options.classes.buttonFocus
     });
-    this._disposeSupport.addDisposer(function () {
+    this.disposeSupport.addDisposer(function () {
       button.dispose();
     });
     return button;
@@ -368,7 +372,7 @@ qq.FineUploaderBasic.prototype = {
   },
   _preventLeaveInProgress: function () {
     var self = this;
-    this._disposeSupport.attach(window, 'beforeunload', function (e) {
+    this.disposeSupport.attach(window, 'beforeunload', function (e) {
       if (!self._filesInProgress.length) {
         return;
       }
@@ -582,7 +586,7 @@ qq.FineUploaderBasic.prototype = {
     } while (bytes > 99);
     return Math.max(bytes, 0.1).toFixed(1) + this.options.text.sizeSymbols[i];
   },
-  _wrapCallbacks: function () {
+  wrapCallbacks: function () {
     var self, safeCallback;
     self = this;
     safeCallback = function (name, callback, args) {

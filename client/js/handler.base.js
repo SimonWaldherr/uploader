@@ -2,12 +2,17 @@
  * Class for uploading files, uploading itself is handled by child classes
  */
 
+/*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq*/
 
 qq.UploadHandler = function (o) {
   "use strict";
   var queue = [],
-    options, log, dequeue, handlerImpl;
+    options,
+    log,
+    dequeue,
+    handlerImpl;
+
   // Default options, can be overridden by the user
   options = {
     debug: false,
@@ -45,7 +50,8 @@ qq.UploadHandler = function (o) {
       paramNames: {
         name: 'qqblobname'
       }
-    },
+    }
+    /*,
     log: function (str, level) {},
     onProgress: function (id, fileName, loaded, total) {},
     onComplete: function (id, fileName, response, xhr) {},
@@ -53,7 +59,7 @@ qq.UploadHandler = function (o) {
     onUpload: function (id, fileName) {},
     onUploadChunk: function (id, fileName, chunkData) {},
     onAutoRetry: function (id, fileName, response, xhr) {},
-    onResume: function (id, fileName, chunkData) {}
+    onResume: function (id, fileName, chunkData) {}*/
   };
   qq.extend(options, o);
   log = options.log;
@@ -99,9 +105,8 @@ qq.UploadHandler = function (o) {
       var i = qq.indexOf(queue, id);
       if (i >= 0) {
         return handlerImpl.upload(id, true);
-      } else {
-        return this.upload(id);
       }
+      return this.upload(id);
     },
     /**
      * Cancels file upload by id
