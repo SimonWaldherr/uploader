@@ -3,7 +3,11 @@
  * @inherits qq.FineUploaderBasic
  */
 
+/*jslint browser: true, unparam: true, indent: 2 */
+/*globals qq, alert, confirm */
+
 qq.FineUploader = function (o) {
+  "use strict";
   // call parent constructor
   qq.FineUploaderBasic.apply(this, arguments);
   // additional options
@@ -106,60 +110,72 @@ qq.FineUploader = function (o) {
   this.options.fileTemplate = this.options.fileTemplate.replace(/\{statusText\}/g, "");
   this.element = this.options.element;
   this.element.innerHTML = this.options.template;
-  this._listElement = this.options.listElement || this._find(this.element, 'list');
-  this._classes = this.options.classes;
-  if (!this._button) {
-    this._button = this._createUploadButton(this._find(this.element, 'button'));
+  this.listElement = this.options.listElement || this.find(this.element, 'list');
+  this.classes = this.options.classes;
+  if (!this.button) {
+    this.button = this.createUploadButton(this.find(this.element, 'button'));
   }
-  this._bindCancelAndRetryEvents();
-  this._dnd = this._setupDragAndDrop();
+  this.bindCancelAndRetryEvents();
+  this.dnd = this.setupDragAndDrop();
 };
 // inherit from Basic Uploader
 qq.extend(qq.FineUploader.prototype, qq.FineUploaderBasic.prototype);
 qq.extend(qq.FineUploader.prototype, {
   clearStoredFiles: function () {
+    "use strict";
     qq.FineUploaderBasic.prototype.clearStoredFiles.apply(this, arguments);
-    this._listElement.innerHTML = "";
+    this.listElement.innerHTML = "";
   },
   addExtraDropzone: function (element) {
-    this._dnd.setupExtraDropzone(element);
+    "use strict";
+    this.dnd.setupExtraDropzone(element);
   },
   removeExtraDropzone: function (element) {
-    return this._dnd.removeExtraDropzone(element);
+    "use strict";
+    return this.dnd.removeExtraDropzone(element);
   },
   getItemByFileId: function (id) {
-    var item = this._listElement.firstChild;
+    "use strict";
+    var item = this.listElement.firstChild;
     // there can't be txt nodes in dynamically created list
     // and we can  use nextSibling
     while (item) {
-      if (item.qqFileId == id) return item;
+      if (item.qqFileId === id) {
+        return item;
+      }
       item = item.nextSibling;
     }
   },
   reset: function () {
+    "use strict";
     qq.FineUploaderBasic.prototype.reset.apply(this, arguments);
     this.element.innerHTML = this.options.template;
-    this._listElement = this.options.listElement || this._find(this.element, 'list');
+    this.listElement = this.options.listElement || this.find(this.element, 'list');
     if (!this.options.button) {
-      this._button = this._createUploadButton(this._find(this.element, 'button'));
+      this.button = this.createUploadButton(this.find(this.element, 'button'));
     }
-    this._bindCancelAndRetryEvents();
-    this._dnd.dispose();
-    this._dnd = this._setupDragAndDrop();
+    this.bindCancelAndRetryEvents();
+    this.dnd.dispose();
+    this.dnd = this.setupDragAndDrop();
   },
-  _removeFileItem: function (fileId) {
+  removeFileItem: function (fileId) {
+    "use strict";
     var item = this.getItemByFileId(fileId);
     qq(item).remove();
   },
-  _setupDragAndDrop: function () {
+  setupDragAndDrop: function () {
+    "use strict";
     var self = this,
-      dropProcessingEl = this._find(this.element, 'dropProcessing'),
-      dnd, preventSelectFiles, defaultDropAreaEl;
+      dropProcessingEl = this.find(this.element, 'dropProcessing'),
+      dnd,
+      preventSelectFiles,
+      defaultDropAreaEl;
+
     preventSelectFiles = function (event) {
       event.preventDefault();
     };
     if (!this.options.dragAndDrop.disableDefaultDropzone) {
-      defaultDropAreaEl = this._find(this.options.element, 'drop');
+      defaultDropAreaEl = this.find(this.options.element, 'drop');
     }
     dnd = new qq.DragAndDrop({
       dropArea: defaultDropAreaEl,
@@ -171,7 +187,7 @@ qq.extend(qq.FineUploader.prototype, {
       },
       callbacks: {
         dropProcessing: function (isProcessing, files) {
-          var input = self._button.getInput();
+          var input = self.button.getInput();
           if (isProcessing) {
             qq(dropProcessingEl).css({
               display: 'block'
@@ -186,7 +202,7 @@ qq.extend(qq.FineUploader.prototype, {
           }
         },
         error: function (code, filename) {
-          self._error(code, filename);
+          self.error(code, filename);
         },
         log: function (message, level) {
           self.log(message, level);
@@ -197,40 +213,44 @@ qq.extend(qq.FineUploader.prototype, {
     return dnd;
   },
   leaving_document_out: function (e) {
-    return ((qq.chrome() || (qq.safari() && qq.windows())) && e.clientX == 0 && e.clientY == 0) // null coords for Chrome and Safari Windows
-    || (qq.firefox() && !e.relatedTarget); // null e.relatedTarget for Firefox
+    "use strict";
+    return ((qq.chrome() || (qq.safari() && qq.windows())) && e.clientX === 0 && e.clientY === 0) || (qq.firefox() && !e.relatedTarget);
   },
-  _storeForLater: function (id) {
-    qq.FineUploaderBasic.prototype._storeForLater.apply(this, arguments);
+  storeForLater: function (id) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.storeForLater.apply(this, arguments);
     var item = this.getItemByFileId(id);
-    qq(this._find(item, 'spinner')).hide();
+    qq(this.find(item, 'spinner')).hide();
   },
   /**
    * Gets one of the elements listed in this.options.classes
    **/
-  _find: function (parent, type) {
+  find: function (parent, type) {
+    "use strict";
     var element = qq(parent).getByClass(this.options.classes[type])[0];
     if (!element) {
       throw new Error('element not found ' + type);
     }
     return element;
   },
-  _onSubmit: function (id, name) {
-    qq.FineUploaderBasic.prototype._onSubmit.apply(this, arguments);
+  onSubmit: function (id, name) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.onSubmit.apply(this, arguments);
     this.addToList(id, name);
   },
   // Update the progress bar & percentage as the file is uploaded
-  _onProgress: function (id, name, loaded, total) {
-    qq.FineUploaderBasic.prototype._onProgress.apply(this, arguments);
+  onProgress: function (id, name, loaded, total) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.onProgress.apply(this, arguments);
     var item, progressBar, percent, cancelLink;
     item = this.getItemByFileId(id);
-    progressBar = this._find(item, 'progressBar');
+    progressBar = this.find(item, 'progressBar');
     percent = Math.round(loaded / total * 100);
     if (loaded === total) {
-      cancelLink = this._find(item, 'cancel');
+      cancelLink = this.find(item, 'cancel');
       qq(cancelLink).hide();
       qq(progressBar).hide();
-      qq(this._find(item, 'statusText')).setText(this.options.text.waitingForResponse);
+      qq(this.find(item, 'statusText')).setText(this.options.text.waitingForResponse);
       // If last byte was sent, display total file size
       this.displayFileSize(id);
     } else {
@@ -245,85 +265,91 @@ qq.extend(qq.FineUploader.prototype, {
       width: percent + '%'
     });
   },
-  _onComplete: function (id, name, result, xhr) {
-    qq.FineUploaderBasic.prototype._onComplete.apply(this, arguments);
+  onComplete: function (id, name, result, xhr) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.onComplete.apply(this, arguments);
     var item = this.getItemByFileId(id);
-    qq(this._find(item, 'statusText')).clearText();
-    qq(item).removeClass(this._classes.retrying);
-    qq(this._find(item, 'progressBar')).hide();
+    qq(this.find(item, 'statusText')).clearText();
+    qq(item).removeClass(this.classes.retrying);
+    qq(this.find(item, 'progressBar')).hide();
     if (!this.options.disableCancelForFormUploads || qq.isXhrUploadSupported()) {
-      qq(this._find(item, 'cancel')).hide();
+      qq(this.find(item, 'cancel')).hide();
     }
-    qq(this._find(item, 'spinner')).hide();
+    qq(this.find(item, 'spinner')).hide();
     if (result.success) {
-      if (this._isDeletePossible()) {
-        this._showDeleteLink(id);
+      if (this.isDeletePossible()) {
+        this.showDeleteLink(id);
       }
-      qq(item).addClass(this._classes.success);
-      if (this._classes.successIcon) {
-        this._find(item, 'finished').style.display = "inline-block";
-        qq(item).addClass(this._classes.successIcon);
+      qq(item).addClass(this.classes.success);
+      if (this.classes.successIcon) {
+        this.find(item, 'finished').style.display = "inline-block";
+        qq(item).addClass(this.classes.successIcon);
       }
     } else {
-      qq(item).addClass(this._classes.fail);
-      if (this._classes.failIcon) {
-        this._find(item, 'finished').style.display = "inline-block";
-        qq(item).addClass(this._classes.failIcon);
+      qq(item).addClass(this.classes.fail);
+      if (this.classes.failIcon) {
+        this.find(item, 'finished').style.display = "inline-block";
+        qq(item).addClass(this.classes.failIcon);
       }
-      if (this.options.retry.showButton && !this._preventRetries[id]) {
-        qq(item).addClass(this._classes.retryable);
+      if (this.options.retry.showButton && !this.preventRetries[id]) {
+        qq(item).addClass(this.classes.retryable);
       }
-      this._controlFailureTextDisplay(item, result);
+      this.controlFailureTextDisplay(item, result);
     }
   },
-  _onUpload: function (id, name) {
-    qq.FineUploaderBasic.prototype._onUpload.apply(this, arguments);
-    this._showSpinner(id);
+  onUpload: function (id, name) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.onUpload.apply(this, arguments);
+    this.showSpinner(id);
   },
-  _onCancel: function (id, name) {
-    qq.FineUploaderBasic.prototype._onCancel.apply(this, arguments);
-    this._removeFileItem(id);
+  onCancel: function (id, name) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.onCancel.apply(this, arguments);
+    this.removeFileItem(id);
   },
-  _onBeforeAutoRetry: function (id) {
+  onBeforeAutoRetry: function (id) {
+    "use strict";
     var item, progressBar, failTextEl, retryNumForDisplay, maxAuto, retryNote;
-    qq.FineUploaderBasic.prototype._onBeforeAutoRetry.apply(this, arguments);
+    qq.FineUploaderBasic.prototype.onBeforeAutoRetry.apply(this, arguments);
     item = this.getItemByFileId(id);
-    progressBar = this._find(item, 'progressBar');
-    this._showCancelLink(item);
+    progressBar = this.find(item, 'progressBar');
+    this.showCancelLink(item);
     progressBar.style.width = 0;
     qq(progressBar).hide();
     if (this.options.retry.showAutoRetryNote) {
-      failTextEl = this._find(item, 'statusText');
-      retryNumForDisplay = this._autoRetries[id] + 1;
+      failTextEl = this.find(item, 'statusText');
+      retryNumForDisplay = this.autoRetries[id] + 1;
       maxAuto = this.options.retry.maxAutoAttempts;
       retryNote = this.options.retry.autoRetryNote.replace(/\{retryNum\}/g, retryNumForDisplay);
       retryNote = retryNote.replace(/\{maxAuto\}/g, maxAuto);
       qq(failTextEl).setText(retryNote);
       if (retryNumForDisplay === 1) {
-        qq(item).addClass(this._classes.retrying);
+        qq(item).addClass(this.classes.retrying);
       }
     }
   },
   //return false if we should not attempt the requested retry
-  _onBeforeManualRetry: function (id) {
-    if (qq.FineUploaderBasic.prototype._onBeforeManualRetry.apply(this, arguments)) {
+  onBeforeManualRetry: function (id) {
+    "use strict";
+    if (qq.FineUploaderBasic.prototype.onBeforeManualRetry.apply(this, arguments)) {
       var item = this.getItemByFileId(id);
-      this._find(item, 'progressBar').style.width = 0;
-      qq(item).removeClass(this._classes.fail);
-      qq(this._find(item, 'statusText')).clearText();
-      this._showSpinner(id);
-      this._showCancelLink(item);
+      this.find(item, 'progressBar').style.width = 0;
+      qq(item).removeClass(this.classes.fail);
+      qq(this.find(item, 'statusText')).clearText();
+      this.showSpinner(id);
+      this.showCancelLink(item);
       return true;
     }
     return false;
   },
-  _onSubmitDelete: function (id) {
-    if (this._isDeletePossible()) {
+  onSubmitDelete: function (id) {
+    "use strict";
+    if (this.isDeletePossible()) {
       if (this.options.callbacks.onSubmitDelete(id) !== false) {
         if (this.options.deleteFile.forceConfirm) {
-          this._showDeleteConfirm(id);
+          this.showDeleteConfirm(id);
         } else {
-          this._sendDeleteRequest(id);
+          this.sendDeleteRequest(id);
         }
       }
     } else {
@@ -331,67 +357,76 @@ qq.extend(qq.FineUploader.prototype, {
       return false;
     }
   },
-  _onDeleteComplete: function (id, xhr, isError) {
-    qq.FineUploaderBasic.prototype._onDeleteComplete.apply(this, arguments);
+  onDeleteComplete: function (id, xhr, isError) {
+    "use strict";
+    qq.FineUploaderBasic.prototype.onDeleteComplete.apply(this, arguments);
     var item = this.getItemByFileId(id),
-      spinnerEl = this._find(item, 'spinner'),
-      statusTextEl = this._find(item, 'statusText');
+      spinnerEl = this.find(item, 'spinner'),
+      statusTextEl = this.find(item, 'statusText');
     qq(spinnerEl).hide();
     if (isError) {
       qq(statusTextEl).setText(this.options.deleteFile.deletingFailedText);
-      this._showDeleteLink(id);
+      this.showDeleteLink(id);
     } else {
-      this._removeFileItem(id);
+      this.removeFileItem(id);
     }
   },
-  _sendDeleteRequest: function (id) {
+  sendDeleteRequest: function (id) {
+    "use strict";
     var item = this.getItemByFileId(id),
-      deleteLink = this._find(item, 'deleteButton'),
-      statusTextEl = this._find(item, 'statusText');
+      deleteLink = this.find(item, 'deleteButton'),
+      statusTextEl = this.find(item, 'statusText');
     qq(deleteLink).hide();
-    this._showSpinner(id);
+    this.showSpinner(id);
     qq(statusTextEl).setText(this.options.deleteFile.deletingStatusText);
-    this._deleteHandler.sendDelete(id, this.getUuid(id));
+    this.deleteHandler.sendDelete(id, this.getUuid(id));
   },
-  _showDeleteConfirm: function (id) {
-    var fileName = this._handler.getName(id),
+  showDeleteConfirm: function (id) {
+    "use strict";
+    var fileName = this.handler.getName(id),
       confirmMessage = this.options.deleteFile.confirmMessage.replace(/\{filename\}/g, fileName),
-      uuid = this.getUuid(id),
+      //uuid = this.getUuid(id),
       self = this;
     this.options.showConfirm(confirmMessage, function () {
-      self._sendDeleteRequest(id);
+      self.sendDeleteRequest(id);
     });
   },
   addToList: function (id, name) {
-    var item = qq.toElement(this.options.fileTemplate);
+    "use strict";
+    var item = qq.toElement(this.options.fileTemplate),
+      cancelLink,
+      fileElement;
+
     if (this.options.disableCancelForFormUploads && !qq.isXhrUploadSupported()) {
-      var cancelLink = this._find(item, 'cancel');
+      cancelLink = this.find(item, 'cancel');
       qq(cancelLink).remove();
     }
     item.qqFileId = id;
-    var fileElement = this._find(item, 'file');
+    fileElement = this.find(item, 'file');
     qq(fileElement).setText(this.options.formatFileName(name));
-    qq(this._find(item, 'size')).hide();
+    qq(this.find(item, 'size')).hide();
     if (!this.options.multiple) {
-      this._handler.cancelAll();
+      this.handler.cancelAll();
       this.clearList();
     }
-    this._listElement.appendChild(item);
+    this.listElement.appendChild(item);
     if (this.options.display.fileSizeOnSubmit && qq.isXhrUploadSupported()) {
       this.displayFileSize(id);
     }
   },
   clearList: function () {
-    this._listElement.innerHTML = '';
+    "use strict";
+    this.listElement.innerHTML = '';
     this.clearStoredFiles();
   },
   displayFileSize: function (id, loadedSize, totalSize) {
+    "use strict";
     var item = this.getItemByFileId(id),
       size = this.getSize(id),
-      sizeForDisplay = this._formatSize(size),
-      sizeEl = this._find(item, 'size');
+      sizeForDisplay = this.formatSize(size),
+      sizeEl = this.find(item, 'size');
     if (loadedSize !== undefined && totalSize !== undefined) {
-      sizeForDisplay = this._formatProgress(loadedSize, totalSize);
+      sizeForDisplay = this.formatProgress(loadedSize, totalSize);
     }
     qq(sizeEl).css({
       display: 'inline'
@@ -401,40 +436,47 @@ qq.extend(qq.FineUploader.prototype, {
   /**
    * delegate click event for cancel & retry links
    **/
-  _bindCancelAndRetryEvents: function () {
+  bindCancelAndRetryEvents: function () {
+    "use strict";
     var self = this,
-      list = this._listElement;
+      list = this.listElement;
+
     this.disposeSupport.attach(list, 'click', function (e) {
+      var target,
+        item;
+
       e = e || window.event;
-      var target = e.target || e.srcElement;
-      if (qq(target).hasClass(self._classes.cancel) || qq(target).hasClass(self._classes.retry) || qq(target).hasClass(self._classes.deleteButton)) {
+      target = e.target || e.srcElement;
+      if (qq(target).hasClass(self.classes.cancel) || qq(target).hasClass(self.classes.retry) || qq(target).hasClass(self.classes.deleteButton)) {
         qq.preventDefault(e);
-        var item = target.parentNode;
+        item = target.parentNode;
         while (item.qqFileId === undefined) {
           item = target = target.parentNode;
         }
-        if (qq(target).hasClass(self._classes.deleteButton)) {
+        if (qq(target).hasClass(self.classes.deleteButton)) {
           self.deleteFile(item.qqFileId);
-        } else if (qq(target).hasClass(self._classes.cancel)) {
+        } else if (qq(target).hasClass(self.classes.cancel)) {
           self.cancel(item.qqFileId);
         } else {
-          qq(item).removeClass(self._classes.retryable);
+          qq(item).removeClass(self.classes.retryable);
           self.retry(item.qqFileId);
         }
       }
     });
   },
-  _formatProgress: function (uploadedSize, totalSize) {
+  formatProgress: function (uploadedSize, totalSize) {
+    "use strict";
     var message = this.options.text.formatProgress;
 
     function r(name, replacement) {
       message = message.replace(name, replacement);
     }
     r('{percent}', Math.round(uploadedSize / totalSize * 100));
-    r('{total_size}', this._formatSize(totalSize));
+    r('{total_size}', this.formatSize(totalSize));
     return message;
   },
-  _controlFailureTextDisplay: function (item, response) {
+  controlFailureTextDisplay: function (item, response) {
+    "use strict";
     var mode, maxChars, responseProperty, failureReason, shortFailureReason;
     mode = this.options.failedUploadTextDisplay.mode;
     maxChars = this.options.failedUploadTextDisplay.maxChars;
@@ -449,41 +491,46 @@ qq.extend(qq.FineUploader.prototype, {
         failureReason = this.options.text.failUpload;
         this.log("'" + responseProperty + "' is not a valid property on the server response.", 'warn');
       }
-      qq(this._find(item, 'statusText')).setText(shortFailureReason || failureReason);
+      qq(this.find(item, 'statusText')).setText(shortFailureReason || failureReason);
       if (this.options.failedUploadTextDisplay.enableTooltip) {
-        this._showTooltip(item, failureReason);
+        this.showTooltip(item, failureReason);
       }
     } else if (mode === 'default') {
-      qq(this._find(item, 'statusText')).setText(this.options.text.failUpload);
+      qq(this.find(item, 'statusText')).setText(this.options.text.failUpload);
     } else if (mode !== 'none') {
       this.log("failedUploadTextDisplay.mode value of '" + mode + "' is not valid", 'warn');
     }
   },
-  _showTooltip: function (item, text) {
+  showTooltip: function (item, text) {
+    "use strict";
     item.title = text;
   },
-  _showSpinner: function (id) {
+  showSpinner: function (id) {
+    "use strict";
     var item = this.getItemByFileId(id),
-      spinnerEl = this._find(item, 'spinner');
+      spinnerEl = this.find(item, 'spinner');
     spinnerEl.style.display = "inline-block";
   },
-  _showCancelLink: function (item) {
+  showCancelLink: function (item) {
+    "use strict";
     if (!this.options.disableCancelForFormUploads || qq.isXhrUploadSupported()) {
-      var cancelLink = this._find(item, 'cancel');
+      var cancelLink = this.find(item, 'cancel');
       qq(cancelLink).css({
         display: 'inline'
       });
     }
   },
-  _showDeleteLink: function (id) {
+  showDeleteLink: function (id) {
+    "use strict";
     var item = this.getItemByFileId(id),
-      deleteLink = this._find(item, 'deleteButton');
+      deleteLink = this.find(item, 'deleteButton');
     qq(deleteLink).css({
       display: 'inline'
     });
   },
-  _error: function (code, name) {
-    var message = qq.FineUploaderBasic.prototype._error.apply(this, arguments);
+  error: function (code, name) {
+    "use strict";
+    var message = qq.FineUploaderBasic.prototype.error.apply(this, arguments);
     this.options.showMessage(message);
   }
 });
