@@ -1,4 +1,4 @@
-# Fine Uploader
+# Uploader
 
 ###this is the last fine uploader version under MIT license, if you don't mind using a GPL licensed version, you can checkout [the current Widen/fine-uploader version](https://github.com/Widen/fine-uploader)
 
@@ -107,7 +107,7 @@ Have a bug or feature request? Please [create an issue here on GitHub](https://g
 that conforms with [necolas's guidelines](https://github.com/necolas/issue-guidelines/blob/master/README.md).
 
 ### License
-This plugin is open sourced under MIT license, GNU GPL 2 or later and GNU LGPL 2 or later. Please see the license.txt file for details.
+This plugin is open sourced under MIT license.
 
 ### Contributors
 We would love developers to contribute any improvements and bugfixes they produce.  Note that any pull requests MUST be against an "IP" branch!
