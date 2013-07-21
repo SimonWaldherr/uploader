@@ -12,6 +12,8 @@
 
 /*jslint browser: true, unparam: true, indent: 2 */
 
+
+
 /*jslint browser: true, unparam: true, indent: 2, bitwise: true */
 /*globals window, navigator, document, FormData, File, HTMLInputElement, XMLHttpRequest, Blob*/
 
@@ -494,6 +496,8 @@ qq.DisposeSupport = function () {
   };
 };
 
+
+
 /*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq */
 
@@ -591,6 +595,8 @@ qq.UploadButton.prototype = {
     return input;
   }
 };
+
+
 
 /** Generic class for sending non-upload ajax requests and handling the associated responses **/
 /*jslint browser: true, unparam: true, indent: 2 */
@@ -757,6 +763,8 @@ qq.AjaxRequestor = function (o) {
   };
 };
 
+
+
 /** Generic class for sending non-upload ajax requests and handling the associated responses **/
 /*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq, XMLHttpRequest*/
@@ -798,6 +806,8 @@ qq.DeleteFileAjaxRequestor = function (o) {
     }
   };
 };
+
+
 
 /**
  * Class for uploading files, uploading itself is handled by child classes
@@ -979,6 +989,8 @@ qq.UploadHandler = function (o) {
   };
 };
 
+
+
 /*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq */
 
@@ -1006,6 +1018,8 @@ qq.WindowReceiveMessage = function (o) {
     }
   };
 };
+
+
 
 /*globals qq, document, setTimeout*/
 
@@ -1245,6 +1259,8 @@ qq.UploadHandlerForm = function (o, uploadCompleteCallback, logCallback) {
   };
   return api;
 };
+
+
 
 /*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq, File, XMLHttpRequest, FormData, Blob */
@@ -1817,6 +1833,8 @@ qq.UploadHandlerXhr = function (o, uploadCompleteCallback, logCallback) {
   resumeId = getResumeId();
   return api;
 };
+
+
 
 /*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq */
@@ -2525,6 +2543,8 @@ qq.FineUploaderBasic.prototype = {
   }
 };
 
+
+
 /*jslint browser: true, unparam: true, indent: 2 */
 /*globals qq, document*/
 
@@ -2835,6 +2855,8 @@ qq.UploadDropZone = function (o) {
     }
   };
 };
+
+
 
 /**
  * Class that creates upload widget with drag-and-drop and file list
