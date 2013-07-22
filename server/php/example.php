@@ -48,7 +48,7 @@ $result = $uploader->handleUpload('uploads');
 
 // To return a name used for uploaded file you can use the following line.
 $result['uploadName'] = $uploader->getUploadName();
-$result['size'] = $uploader->getUploadSize();
+$result['fileSize'] = $uploader->getUploadSize();
 
 header("Content-Type: text/plain");
 echo json_encode($result);

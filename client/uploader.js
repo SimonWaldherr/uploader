@@ -3102,7 +3102,11 @@ qq.extend(qq.FineUploader.prototype, {
   onProgress: function (id, name, loaded, total) {
     "use strict";
     qq.FineUploaderBasic.prototype.onProgress.apply(this, arguments);
-    var item, progressBar, percent, cancelLink;
+    var item,
+      progressBar,
+      percent,
+      cancelLink;
+
     item = this.getItemByFileId(id);
     progressBar = this.find(item, 'progressBar');
     percent = Math.round(loaded / total * 100);
@@ -3141,6 +3145,7 @@ qq.extend(qq.FineUploader.prototype, {
         this.showDeleteLink(id);
       }
       qq(item).addClass(this.classes.success);
+      this.find(item, 'size').innerHTML = this.formatSize(result.fileSize);
       if (this.classes.successIcon) {
         this.find(item, 'finished').style.display = "inline-block";
         qq(item).addClass(this.classes.successIcon);
@@ -3287,6 +3292,8 @@ qq.extend(qq.FineUploader.prototype, {
       sizeEl = this.find(item, 'size');
     if (loadedSize !== undefined && totalSize !== undefined) {
       sizeForDisplay = this.formatProgress(loadedSize, totalSize);
+    } else {
+      sizeForDisplay = '...';
     }
     qq(sizeEl).css({
       display: 'inline'
