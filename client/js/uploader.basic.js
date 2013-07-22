@@ -112,19 +112,19 @@ qq.FineUploaderBasic = function (o) {
   this.wrapCallbacks();
   this.disposeSupport = new qq.DisposeSupport();
   // number of files being uploaded
-  this._filesInProgress = [];
-  this._storedIds = [];
-  this._autoRetries = [];
-  this._retryTimeouts = [];
-  this._preventRetries = [];
-  this._paramsStore = this.createParamsStore("request");
-  this._deleteFileParamsStore = this.createParamsStore("deleteFile");
-  this._endpointStore = this.createEndpointStore("request");
-  this._deleteFileEndpointStore = this.createEndpointStore("deleteFile");
+  this.filesInProgress = [];
+  this.storedIds = [];
+  this.autoRetries = [];
+  this.retryTimeouts = [];
+  this.preventRetries = [];
+  this.paramsStore = this.createParamsStore("request");
+  this.deleteFileParamsStore = this.createParamsStore("deleteFile");
+  this.endpointStore = this.createEndpointStore("request");
+  this.deleteFileEndpointStore = this.createEndpointStore("deleteFile");
   this.handler = this.createUploadHandler();
-  this._deleteHandler = this.createDeleteHandler();
+  this.deleteHandler = this.createDeleteHandler();
   if (this.options.button) {
-    this._button = this.createUploadButton(this.options.button);
+    this.button = this.createUploadButton(this.options.button);
   }
   this.preventLeaveInProgress();
 };
@@ -141,7 +141,7 @@ qq.FineUploaderBasic.prototype = {
     if (id == null) {
       this.options.request.params = params;
     } else {
-      this._paramsStore.setParams(params, id);
+      this.paramsStore.setParams(params, id);
     }
   },
   setDeleteFileParams: function (params, id) {
@@ -149,7 +149,7 @@ qq.FineUploaderBasic.prototype = {
     if (id == null) {
       this.options.deleteFile.params = params;
     } else {
-      this._deleteFileParamsStore.setParams(params, id);
+      this.deleteFileParamsStore.setParams(params, id);
     }
   },
   setEndpoint: function (endpoint, id) {
@@ -157,23 +157,23 @@ qq.FineUploaderBasic.prototype = {
     if (id == null) {
       this.options.request.endpoint = endpoint;
     } else {
-      this._endpointStore.setEndpoint(endpoint, id);
+      this.endpointStore.setEndpoint(endpoint, id);
     }
   },
   getInProgress: function () {
-    return this._filesInProgress.length;
+    return this.filesInProgress.length;
   },
   uploadStoredFiles: function () {
     "use strict";
     var idToUpload;
-    while (this._storedIds.length) {
-      idToUpload = this._storedIds.shift();
-      this._filesInProgress.push(idToUpload);
+    while (this.storedIds.length) {
+      idToUpload = this.storedIds.shift();
+      this.filesInProgress.push(idToUpload);
       this.handler.upload(idToUpload);
     }
   },
   clearStoredFiles: function () {
-    this._storedIds = [];
+    this.storedIds = [];
   },
   retry: function (id) {
     if (this._onBeforeManualRetry(id)) {
@@ -189,7 +189,7 @@ qq.FineUploaderBasic.prototype = {
   cancelAll: function () {
     var storedIdsCopy = [],
       self = this;
-    qq.extend(storedIdsCopy, this._storedIds);
+    qq.extend(storedIdsCopy, this.storedIds);
     qq.each(storedIdsCopy, function (idx, storedFileId) {
       self.cancel(storedFileId);
     });
@@ -198,14 +198,14 @@ qq.FineUploaderBasic.prototype = {
   reset: function () {
     this.log("Resetting uploader...");
     this.handler.reset();
-    this._filesInProgress = [];
-    this._storedIds = [];
-    this._autoRetries = [];
-    this._retryTimeouts = [];
-    this._preventRetries = [];
-    this._button.reset();
-    this._paramsStore.reset();
-    this._endpointStore.reset();
+    this.filesInProgress = [];
+    this.storedIds = [];
+    this.autoRetries = [];
+    this.retryTimeouts = [];
+    this.preventRetries = [];
+    this.button.reset();
+    this.paramsStore.reset();
+    this.endpointStore.reset();
   },
   addFiles: function (filesBlobDataOrInputs) {
     var self = this,
@@ -269,7 +269,7 @@ qq.FineUploaderBasic.prototype = {
     if (id == null) {
       this.options.deleteFile.endpoint = endpoint;
     } else {
-      this._deleteFileEndpointStore.setEndpoint(endpoint, id);
+      this.deleteFileEndpointStore.setEndpoint(endpoint, id);
     }
   },
   createUploadButton: function (element) {
@@ -302,8 +302,8 @@ qq.FineUploaderBasic.prototype = {
       cors: this.options.cors,
       demoMode: this.options.demoMode,
       paramsInBody: this.options.request.paramsInBody,
-      paramsStore: this._paramsStore,
-      endpointStore: this._endpointStore,
+      paramsStore: this.paramsStore,
+      endpointStore: this.endpointStore,
       chunking: this.options.chunking,
       resume: this.options.resume,
       blobs: this.options.blobs,
@@ -333,12 +333,12 @@ qq.FineUploaderBasic.prototype = {
         return self.options.callbacks.onResume(id, name, chunkData);
       },
       onAutoRetry: function (id, name, responseJSON, xhr) {
-        self._preventRetries[id] = responseJSON[self.options.retry.preventRetryResponseProperty];
+        self.preventRetries[id] = responseJSON[self.options.retry.preventRetryResponseProperty];
         if (self._shouldAutoRetry(id, name, responseJSON)) {
           self.maybeParseAndSendUploadError(id, name, responseJSON, xhr);
-          self.options.callbacks.onAutoRetry(id, name, self._autoRetries[id] + 1);
+          self.options.callbacks.onAutoRetry(id, name, self.autoRetries[id] + 1);
           self._onBeforeAutoRetry(id, name);
-          self._retryTimeouts[id] = setTimeout(function () {
+          self.retryTimeouts[id] = setTimeout(function () {
             self._onAutoRetry(id, name, responseJSON)
           }, self.options.retry.autoAttemptDelay * 1000);
           return true;
@@ -353,8 +353,8 @@ qq.FineUploaderBasic.prototype = {
     return new qq.DeleteFileAjaxRequestor({
       maxConnections: this.options.maxConnections,
       customHeaders: this.options.deleteFile.customHeaders,
-      paramsStore: this._deleteFileParamsStore,
-      endpointStore: this._deleteFileEndpointStore,
+      paramsStore: this.deleteFileParamsStore,
+      endpointStore: this.deleteFileEndpointStore,
       demoMode: this.options.demoMode,
       cors: this.options.cors,
       log: function (str, level) {
@@ -373,7 +373,7 @@ qq.FineUploaderBasic.prototype = {
   preventLeaveInProgress: function () {
     var self = this;
     this.disposeSupport.attach(window, 'beforeunload', function (e) {
-      if (!self._filesInProgress.length) {
+      if (!self.filesInProgress.length) {
         return;
       }
       var e = e || window.event;
@@ -385,7 +385,7 @@ qq.FineUploaderBasic.prototype = {
   },
   onSubmit: function (id, name) {
     if (this.options.autoUpload) {
-      this._filesInProgress.push(id);
+      this.filesInProgress.push(id);
     }
   },
   onProgress: function (id, name, loaded, total) {},
@@ -395,10 +395,10 @@ qq.FineUploaderBasic.prototype = {
   },
   onCancel: function (id, name) {
     this.removeFromFilesInProgress(id);
-    clearTimeout(this._retryTimeouts[id]);
-    var storedItemIndex = qq.indexOf(this._storedIds, id);
+    clearTimeout(this.retryTimeouts[id]);
+    var storedItemIndex = qq.indexOf(this.storedIds, id);
     if (!this.options.autoUpload && storedItemIndex >= 0) {
-      this._storedIds.splice(storedItemIndex, 1);
+      this.storedIds.splice(storedItemIndex, 1);
     }
   },
   isDeletePossible: function () {
@@ -411,7 +411,7 @@ qq.FineUploaderBasic.prototype = {
   onSubmitDelete: function (id) {
     if (this.isDeletePossible()) {
       if (this.options.callbacks.onSubmitDelete(id)) {
-        this._deleteHandler.sendDelete(id, this.getUuid(id));
+        this.deleteHandler.sendDelete(id, this.getUuid(id));
       }
     } else {
       this.log("Delete request ignored for ID " + id + ", delete feature is disabled or request not possible " +
@@ -430,9 +430,9 @@ qq.FineUploaderBasic.prototype = {
     }
   },
   removeFromFilesInProgress: function (id) {
-    var index = qq.indexOf(this._filesInProgress, id);
+    var index = qq.indexOf(this.filesInProgress, id);
     if (index >= 0) {
-      this._filesInProgress.splice(index, 1);
+      this.filesInProgress.splice(index, 1);
     }
   },
   onUpload: function (id, name) {},
@@ -442,28 +442,28 @@ qq.FineUploaderBasic.prototype = {
     } else {
       this.addFiles(input);
     }
-    this._button.reset();
+    this.button.reset();
   },
   _onBeforeAutoRetry: function (id, name) {
     this.log("Waiting " + this.options.retry.autoAttemptDelay + " seconds before retrying " + name + "...");
   },
   _onAutoRetry: function (id, name, responseJSON) {
     this.log("Retrying " + name + "...");
-    this._autoRetries[id]++;
+    this.autoRetries[id]++;
     this.handler.retry(id);
   },
   _shouldAutoRetry: function (id, name, responseJSON) {
-    if (!this._preventRetries[id] && this.options.retry.enableAuto) {
-      if (this._autoRetries[id] === undefined) {
-        this._autoRetries[id] = 0;
+    if (!this.preventRetries[id] && this.options.retry.enableAuto) {
+      if (this.autoRetries[id] === undefined) {
+        this.autoRetries[id] = 0;
       }
-      return this._autoRetries[id] < this.options.retry.maxAutoAttempts
+      return this.autoRetries[id] < this.options.retry.maxAutoAttempts
     }
     return false;
   },
   //return false if we should not attempt the requested retry
   _onBeforeManualRetry: function (id) {
-    if (this._preventRetries[id]) {
+    if (this.preventRetries[id]) {
       this.log("Retries are forbidden for id " + id, 'warn');
       return false;
     } else if (this.handler.isValid(id)) {
@@ -472,7 +472,7 @@ qq.FineUploaderBasic.prototype = {
         return false;
       }
       this.log("Retrying upload for '" + fileName + "' (id: " + id + ")...");
-      this._filesInProgress.push(id);
+      this.filesInProgress.push(id);
       return true;
     } else {
       this.log("'" + id + "' is not a valid file ID", 'error');
@@ -523,7 +523,7 @@ qq.FineUploaderBasic.prototype = {
     }
   },
   storeForLater: function (id) {
-    this._storedIds.push(id);
+    this.storedIds.push(id);
   },
   validateFileOrBlobData: function (fileOrBlobData) {
     var validationDescriptor, name, size;
